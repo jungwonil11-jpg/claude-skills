@@ -6,43 +6,31 @@ Claude Code 글로벌 skill 모음. 새 컴퓨터에서 셋업하면 모든 프�
 
 ## 새 컴퓨터 셋업 (한 번만)
 
-### 방법 ① — 더블클릭 (가장 쉬움)
+이 레포 자체를 `~/.claude/skills/` 폴더로 clone. 그러면 Claude Code가 바로 인식하고, 작업한 걸 별도 복사 없이 곧장 commit/push 가능.
 
-1. 이 레포를 적당한 위치에 클론
-   - GitHub Desktop, VS Code의 "Clone Repository", 또는 명령어로:
-     ```
-     git clone https://github.com/jungwonil11-jpg/claude-skills
-     ```
-2. 파일 탐색기로 클론된 `claude-skills` 폴더 열기
-3. 안에 있는 **`setup.bat`** 파일을 **더블클릭**
-4. 검정 창이 뜨면서 `Done: skills copied to ...` 메시지 출력
-5. `Press any key to continue . . .` 나오면 아무 키나 눌러서 닫기
+```cmd
+rmdir /s /q %USERPROFILE%\.claude\skills
+git clone https://github.com/jungwonil11-jpg/claude-skills %USERPROFILE%\.claude\skills
+```
 
-### 방법 ② — CMD 명령어로
+(기존에 `~/.claude/skills/`에 다른 스킬이 있다면 먼저 백업)
 
-1. **시작 메뉴 → "cmd" 검색 → 명령 프롬프트** 실행
-2. 다음 3줄을 순서대로 입력:
-   ```cmd
-   git clone https://github.com/jungwonil11-jpg/claude-skills
-   cd claude-skills
-   setup.bat
-   ```
+### ⚠️ Claude Code 재시작 필수
 
-### ⚠️ 마지막 한 가지 — Claude Code 재시작 필수
-
-setup.bat을 돌렸다고 바로 슬래시 커맨드가 뜨지 않음.
-**Claude Code를 종료했다가 다시 실행해야** `/푸쉬`, `/노션메모` 등이 자동완성에 나타남.
-
-이미 켜져 있다면:
+clone 직후엔 슬래시 커맨드가 자동완성에 안 뜸. **Claude Code를 종료했다가 다시 실행**해야 인식됨.
 - `/exit` 입력 또는 창 닫기 → 다시 `claude` 실행
-- VS Code 등 IDE 내 Claude Code 패널이면 패널 닫고 다시 열기
+- IDE 패널이면 패널 닫고 다시 열기
 
-### 레포 업데이트 후
+### 업데이트 / 작업 동기화
 
-이 레포에 새 skill이 추가되거나 기존 skill이 수정되면, 본인 PC에서:
-1. `claude-skills` 폴더에서 `git pull` (또는 GitHub Desktop에서 Pull)
-2. `setup.bat` 다시 더블클릭
-3. Claude Code 재시작
+별도 복사 단계 없음. `~/.claude/skills/` 자체가 git 레포라 그 안에서 직접:
+
+```cmd
+cd %USERPROFILE%\.claude\skills
+git pull            # 다른 PC에서 push한 변경 받기
+git commit -am "..."   # 작업한 거 커밋
+git push            # 다른 PC와 공유
+```
 
 ---
 
