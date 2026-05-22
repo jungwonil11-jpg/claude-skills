@@ -6,31 +6,37 @@ Claude Code 글로벌 skill 모음. 새 컴퓨터에서 셋업하면 모든 프�
 
 ## 새 컴퓨터 셋업 (한 번만)
 
-이 레포 자체를 `~/.claude/skills/` 폴더로 clone. 그러면 Claude Code가 바로 인식하고, 작업한 걸 별도 복사 없이 곧장 commit/push 가능.
+이 레포를 `~/.claude/claude-skills/`에 clone하고, **각 스킬 폴더를 `~/.claude/skills/`로 junction 링크**. 기존 `~/.claude/skills/` 안에 다른 스킬이 있어도 **건드리지 않고 공존**.
 
 ```cmd
-rmdir /s /q %USERPROFILE%\.claude\skills
-git clone https://github.com/jungwonil11-jpg/claude-skills %USERPROFILE%\.claude\skills
+git clone https://github.com/jungwonil11-jpg/claude-skills %USERPROFILE%\.claude\claude-skills
+cd %USERPROFILE%\.claude\claude-skills
+powershell -ExecutionPolicy Bypass -File setup.ps1
 ```
 
-(기존에 `~/.claude/skills/`에 다른 스킬이 있다면 먼저 백업)
+`setup.ps1`이 각 스킬 폴더(`강사싱크/`, `노션메모/` ...)에 대해 `~/.claude/skills/<이름>`을 junction으로 만듭니다.
+
+- **Junction은 관리자/개발자모드 권한 불필요** (심볼릭 링크와 달리)
+- 같은 이름 스킬이 이미 있으면 건너뛰고 경고 출력 (덮어쓰기 안 함)
 
 ### ⚠️ Claude Code 재시작 필수
 
-clone 직후엔 슬래시 커맨드가 자동완성에 안 뜸. **Claude Code를 종료했다가 다시 실행**해야 인식됨.
+셋업 직후엔 슬래시 커맨드가 자동완성에 안 뜸. **Claude Code를 종료했다가 다시 실행**해야 인식됨.
 - `/exit` 입력 또는 창 닫기 → 다시 `claude` 실행
 - IDE 패널이면 패널 닫고 다시 열기
 
 ### 업데이트 / 작업 동기화
 
-별도 복사 단계 없음. `~/.claude/skills/` 자체가 git 레포라 그 안에서 직접:
+별도 복사 단계 없음. 레포에서 직접 작업 → 푸시. Junction이라 `~/.claude/skills/`에서 본 파일은 레포 파일과 같음.
 
 ```cmd
-cd %USERPROFILE%\.claude\skills
-git pull            # 다른 PC에서 push한 변경 받기
-git commit -am "..."   # 작업한 거 커밋
-git push            # 다른 PC와 공유
+cd %USERPROFILE%\.claude\claude-skills
+git pull              # 다른 PC에서 push한 변경 받기 (junction이 자동 반영)
+git commit -am "..."  # 작업 커밋
+git push              # 다른 PC와 공유
 ```
+
+새 스킬 폴더가 추가됐다면 `setup.ps1`을 다시 돌려 누락된 junction 생성.
 
 ---
 
