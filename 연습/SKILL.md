@@ -26,6 +26,10 @@ description: 프로젝트의 학습 파일을 src/에서 직접 빈칸 처리하
 
 = **src/ 가 일시적으로 빈칸 상태**. 학습 끝나면 git diff 0으로 원상복귀.
 
+> ⚠️ **파일 Read 금지 원칙 (`/연습` setup 전용)**: 백업 복사(`src/` → `.practice-backup/`)와 템플릿 복사(`_templates/` → `src/`)는 **Read tool 사용 금지**. PowerShell `Copy-Item`만 사용. 파일 내용을 컨텍스트에 올리지 않음.
+> - **템플릿이 이미 존재하는 경우**: Read 없이 Copy-Item만으로 백업 + src/ 덮어쓰기 끝냄.
+> - **템플릿이 없는 경우 (첫 회차)**: 원본 파일을 Read해서 빈칸 처리 후 템플릿 저장 — 이때만 Read 허용.
+
 ---
 
 ## 빈칸 템플릿 시스템 (100% 전용)
@@ -67,8 +71,8 @@ practice/_templates/members-login_100/
 1. 회차 폴더 결정 (practice/YYYY-MM-DD_<도메인>-<기능>_100[_N]/)
 2. 백업 생성 (.practice-backup/<session-id>/) — 매번 강사 원본 복사 (필터 적용 X)
 3. 템플릿 체크: practice/_templates/<도메인>-<기능slug>_100/ 존재?
-   ├─ 있음 → 템플릿 파일들을 src/로 복사 ✅ (빠름)
-   └─ 없음 → 강사 원본 + _filter.md 적용 + 빈칸 처리 → 템플릿으로 저장 (첫 회차)
+   ├─ 있음 → 템플릿 파일들을 src/로 복사 ✅ (Read 없이 Copy-Item만 — 파일 내용 컨텍스트에 올리지 않음)
+   └─ 없음 → 강사 원본 Read + _filter.md 적용 + 빈칸 처리 → 템플릿으로 저장 (첫 회차, 이때만 Read 허용)
 4. .state, README.md 생성 (매번 새로)
 5. PROGRESS.md 매트릭스 갱신
 ```
@@ -399,15 +403,15 @@ UI 선택지 쓰지 말 것. 텍스트 목록 출력하고 채팅 응답 기다�
 ```
 `<session-id>` = `YYYY-MM-DD_<도메인>-<기능slug>_<%>` (회차 폴더명과 동일하게 — _2, _3 suffix 포함)
 
-각 학습 대상 파일을 백업 위치에 그대로 복사 (디렉토리 구조 유지).
+각 학습 대상 파일을 백업 위치에 그대로 복사 (디렉토리 구조 유지). **Read tool 사용 금지 — Copy-Item만.**
 
 #### d. src/ 파일들 빈칸 버전으로 덮어쓰기
 
 **모든 회차 (33%/67%/100%, 단일·다중 무관)는 템플릿 시스템 우선 사용** ("빈칸 템플릿 시스템" 섹션 참고):
 - 단일: `practice/_templates/<도메인>-<기능slug>_<%>/`
 - 다중: `practice/_templates/<도메인>-<기능1>+<기능2>_<%>/` (`+` 결합)
-- 존재 → 템플릿 파일들을 src/로 복사 후 종료
-- 존재 X → 아래 룰대로 빈칸 처리 + 결과를 `_templates/` 에 저장
+- 존재 → 템플릿 파일들을 src/로 Copy-Item 후 종료. **파일 내용 Read 금지.**
+- 존재 X → 원본 파일 Read 후 빈칸 처리 + 결과를 `_templates/` 에 저장 (이때만 Read 허용)
 
 각 파일을 "빈칸 비율과 자리 정의" 룰대로 처리해서 **src/의 실제 위치에 덮어쓰기**:
 
@@ -705,11 +709,11 @@ practice/YYYY-MM-DD_<파일명slug>_<%>/
 - `파일명slug`: 파일명 케밥케이스 (예: `jwt-util`, `security-config`, `members-vo`)
 - 같은 회차 폴더 이미 있으면 `_2`, `_3` 자동 추가.
 
-학습 대상은 1개 파일. 그 파일을 `.practice-backup/<session-id>/`에 백업 (src/ 트리 미러).
+학습 대상은 1개 파일. 그 파일을 `.practice-backup/<session-id>/`에 백업 (src/ 트리 미러). **Read tool 사용 금지 — Copy-Item만.**
 
 #### c. src/ 파일 빈칸 버전으로 덮어쓰기
 
-"빈칸 비율과 자리 정의" 룰대로 처리해서 src/ 실제 위치에 덮어쓰기.
+템플릿 있으면 Copy-Item만으로 처리. **Read 금지.** 템플릿 없으면 원본 Read 후 빈칸 처리 + 템플릿 저장.
 
 #### d. `.state` 파일 생성
 
