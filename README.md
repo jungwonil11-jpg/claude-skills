@@ -10,11 +10,11 @@ Claude Code 글로벌 skill 모음. 새 컴퓨터에서 셋업하면 모든 프�
 
 ```cmd
 git clone https://github.com/jungwonil11-jpg/claude-skills %USERPROFILE%\.claude\claude-skills
-cd %USERPROFILE%\.claude\claude-skills
-powershell -ExecutionPolicy Bypass -File setup.ps1
 ```
 
-`setup.ps1`이 각 스킬 폴더(`강사싱크/`, `노션메모/` ...)에 대해 `~/.claude/skills/<이름>`을 junction으로 만듭니다.
+클론된 `claude-skills` 폴더의 **`setup.bat`을 더블클릭**하면 끝. (cmd로 돌리려면: `cd %USERPROFILE%\.claude\claude-skills && setup.bat`)
+
+`setup.bat`이 각 스킬 폴더(`강사싱크/`, `노션메모/` ...)에 대해 `~/.claude/skills/<이름>`을 junction으로 만듭니다.
 
 - **Junction은 관리자/개발자모드 권한 불필요** (심볼릭 링크와 달리)
 - 같은 이름 스킬이 이미 있으면 건너뛰고 경고 출력 (덮어쓰기 안 함)
@@ -27,7 +27,7 @@ powershell -ExecutionPolicy Bypass -File setup.ps1
 
 ### 개인 환경 설치 — `/최초셋팅` (Windows)
 
-`setup.ps1`은 **스킬 junction만** 만듦. 시니컬 페르소나·statusline·완료/입력대기 토스트 알림 같은 개인 환경은 재시작 후 Claude Code에서 한 번 더:
+`setup.bat`은 **스킬 junction만** 만듦. 시니컬 페르소나·statusline·완료/입력대기 토스트 알림 같은 개인 환경은 재시작 후 Claude Code에서 한 번 더:
 
 ```
 /최초셋팅
@@ -46,7 +46,7 @@ git commit -am "..."  # 작업 커밋
 git push              # 다른 PC와 공유
 ```
 
-새 스킬 폴더가 추가됐다면 `setup.ps1`을 다시 돌려 누락된 junction 생성.
+새 스킬 폴더가 추가됐다면 `setup.bat`을 다시 더블클릭해 누락된 junction 생성.
 
 ---
 
