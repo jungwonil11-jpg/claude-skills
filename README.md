@@ -25,6 +25,16 @@ powershell -ExecutionPolicy Bypass -File setup.ps1
 - `/exit` 입력 또는 창 닫기 → 다시 `claude` 실행
 - IDE 패널이면 패널 닫고 다시 열기
 
+### 개인 환경 설치 — `/최초셋팅` (Windows)
+
+`setup.ps1`은 **스킬 junction만** 만듦. 시니컬 페르소나·statusline·완료/입력대기 토스트 알림 같은 개인 환경은 재시작 후 Claude Code에서 한 번 더:
+
+```
+/최초셋팅
+```
+
+→ `~/.claude/persona-20대시니컬남성.md` + `statusline.ps1` + `hooks/notify.ps1` 배포 + `settings.json` 머지(기존 키 보존) + BurntToast 설치 + 검증. 끝나면 **Claude Code 한 번 더 재시작**(settings 반영). 머신당 1회.
+
 ### 업데이트 / 작업 동기화
 
 별도 복사 단계 없음. 레포에서 직접 작업 → 푸시. Junction이라 `~/.claude/skills/`에서 본 파일은 레포 파일과 같음.
@@ -51,6 +61,7 @@ git push              # 다른 PC와 공유
 | `/푸쉬` | 현재 브랜치를 origin에 push. fetch → 충돌 분석 → 사용자 결정 → push. |
 | `/연습` | **src/의 학습 대상 파일에 직접 구멍 뚫기** → IDE 풀 기능으로 채우기 → `/연습 채점`으로 채점 + src/ 원본 복구. |
 | `/힌트` | `/연습` 풀다가 막혔을 때 호출. 개념부터 정답까지 섹션별로 설명해줌. |
+| `/최초셋팅` | 새 컴퓨터에서 개인 환경 설치 — 20대 시니컬 페르소나 + statusline(model/effort/context) + 완료/입력대기 토스트 알림. **Windows 전용, 머신당 1회.** |
 
 > **`/강사싱크` 와 `/푸쉬`** 는 `/연습` 진행 중일 때 자동으로 거절됨 (src/ 가 일시적으로 빈칸 상태라 머지/푸쉬가 꼬일 수 있음). `/연습 채점`으로 끝낸 다음 호출하면 정상 동작.
 
