@@ -72,7 +72,7 @@ practice/PROGRESS.md 또는 "기능별 100×100 도전" 표 없음. 먼저 /연�
 | 회원가입+로그인+토큰 재발급+로그아웃 | register+login+refresh+logout (인증 생명주기) |
 | 마이페이지+회원정보 수정+회원 탈퇴 | mypage+update+delete (RUD) |
 
-**다중 기능 슬러그** (`+` 박힌 슬러그): `<도메인>-<기능1>+<기능2>_100` 회차 폴더로 진입. `/연습` 의 5-파일 묶음 다중 기능 100% 워크플로우 그대로 — **템플릿 시스템 ✅ 적용** (`_templates/<도메인>-<기능1>+<기능2>_100/` 존재 시 복사, 없으면 자동 생성), features 배열에 두 원소 박힘.
+**다중 기능 슬러그** (`+` 박힌 슬러그): `<도메인>-<기능1>+<기능2>_100` 회차 폴더로 진입. `/연습` 의 5-파일 묶음 다중 기능 100% 워크플로우 그대로 — **템플릿 시스템 ✅ 적용** (존재 체크는 `Test-Path practice/_templates/<도메인>-<기능1>+<기능2>_100`, ⚠️ Glob tool 금지 — 디렉토리 못 잡음. True 면 복사, False 면 자동 생성), features 배열에 두 원소 박힘.
 
 **매핑 못 찾음** → 안내 후 종료:
 ```
@@ -137,9 +137,9 @@ practice/PROGRESS.md 또는 "기능별 100×100 도전" 표 없음. 먼저 /연�
 
 3. **백업** — `.practice-backup/<session-id>/` (5개 파일 그대로).
 
-4. **템플릿 체크**:
-   - `practice/_templates/<도메인>-<기능slug>_100/` 존재? → src/로 복사
-   - 없음 → 강사 원본 + `_filter.md` 적용 + 100% 빈칸 처리 → `_templates/` 저장 → src/로 복사
+4. **템플릿 체크** (⚠️ **`Test-Path` 사용, Glob tool 금지** — Glob 은 디렉토리를 못 잡아서 폴더가 있어도 "없음" 오판 → 매번 재생성. slug 은 소문자):
+   - `Test-Path practice/_templates/<도메인>-<기능slug>_100` → True 면 src/로 Copy-Item (Read 금지)
+   - False → 강사 원본 Read + `_filter.md` 적용 + 100% 빈칸 처리 → `_templates/` 저장 → src/로 복사
 
 5. **`.state`**:
    ```json
@@ -184,9 +184,9 @@ practice/PROGRESS.md 또는 "기능별 100×100 도전" 표 없음. 먼저 /연�
 
 4. **백업** — `.practice-backup/<session-id>/` 에 위 파일들 그대로 복사.
 
-5. **템플릿 체크**:
-   - `practice/_templates/<도메인>-종합_100/` 존재? → src/로 복사
-   - 없음 → 강사 원본 + `_filter.md` 적용 + 100% 빈칸 처리 (VO 룰 포함 — `/연습` 2-A-종합 d 참고) → `_templates/` 저장 → src/로 복사
+5. **템플릿 체크** (⚠️ **`Test-Path` 사용, Glob tool 금지** — Glob 은 디렉토리를 못 잡아서 폴더가 있어도 "없음" 오판 → 매번 재생성. slug 은 소문자):
+   - `Test-Path practice/_templates/<도메인>-종합_100` → True 면 src/로 Copy-Item (Read 금지)
+   - False → 강사 원본 Read + `_filter.md` 적용 + 100% 빈칸 처리 (VO 룰 포함 — `/연습` 2-A-종합 d 참고) → `_templates/` 저장 → src/로 복사
 
 6. **`.state`**:
    ```json

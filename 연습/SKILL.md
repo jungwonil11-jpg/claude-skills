@@ -36,6 +36,22 @@ description: 프로젝트의 학습 파일을 src/에서 직접 빈칸 처리하
 
 `/연습 <기능> 100` 호출 시 매번 빈칸을 새로 만들지 않고 **템플릿에서 복사**한다. 100번 풀어도 동일한 빈칸 패턴 보장 + 토큰 절약.
 
+### ⚠️ 템플릿 존재 체크 방법 (필수 — Glob tool 금지)
+
+템플릿 폴더 존재 확인은 **반드시 PowerShell `Test-Path`** 로 한다. **Glob tool 로 디렉토리 경로를 체크하지 말 것.**
+
+- **버그 원인**: Glob tool 은 **파일만 매칭하고 디렉토리는 매칭 못 함**. `Glob practice/_templates/<slug>_<%>` 는 폴더가 멀쩡히 있어도 항상 `No files found` 를 반환 → "템플릿 없음"으로 오판 → 매번 재생성.
+- **올바른 체크**:
+  ```powershell
+  Test-Path 'practice/_templates/<slug>_<%>'
+  ```
+  `True` → 템플릿 있음 (Copy-Item 으로 src/ 덮어쓰기, Read 금지). `False` → 없음 (원본 Read + 빈칸 처리 + 템플릿 저장).
+- 굳이 Glob 을 써야 하면 디렉토리가 아니라 **내부 파일**을 매칭: 패턴 끝에 `/**` 붙임 → `practice/_templates/<slug>_<%>/**`.
+
+**slug 정규화 — 항상 소문자**:
+- slug 은 **파일명(확장자 제거)을 전부 소문자**로. 예: `TodoPage.jsx` → `todopage`, `useTodoStore.jsx` → `usetodostore`, `Http.jsx` → `http`, `MemoPage.jsx` → `memopage`.
+- Windows 파일시스템은 대소문자 무시라 `Test-Path` 는 케이싱이 달라도 매칭되지만(`TodoPage_67` 도 `todopage_67` 폴더에 매칭), **템플릿 폴더를 새로 만들 때는 항상 소문자**로 만들어 명명 일관성 유지.
+
 ### 적용 범위
 
 | 모드 | 템플릿화 |
@@ -70,9 +86,9 @@ practice/_templates/members-login_100/
 ```
 1. 회차 폴더 결정 (practice/YYYY-MM-DD_<도메인>-<기능>_100[_N]/)
 2. 백업 생성 (.practice-backup/<session-id>/) — 매번 강사 원본 복사 (필터 적용 X)
-3. 템플릿 체크: practice/_templates/<도메인>-<기능slug>_100/ 존재?
-   ├─ 있음 → 템플릿 파일들을 src/로 복사 ✅ (Read 없이 Copy-Item만 — 파일 내용 컨텍스트에 올리지 않음)
-   └─ 없음 → 강사 원본 Read + _filter.md 적용 + 빈칸 처리 → 템플릿으로 저장 (첫 회차, 이때만 Read 허용)
+3. 템플릿 체크: `Test-Path practice/_templates/<도메인>-<기능slug>_100` (⚠️ Glob tool 금지 — 디렉토리 못 잡음)
+   ├─ True → 템플릿 파일들을 src/로 복사 ✅ (Read 없이 Copy-Item만 — 파일 내용 컨텍스트에 올리지 않음)
+   └─ False → 강사 원본 Read + _filter.md 적용 + 빈칸 처리 → 템플릿으로 저장 (첫 회차, 이때만 Read 허용)
 4. .state 생성 (매번 새로)
 5. PROGRESS.md 매트릭스 갱신
 ```
@@ -410,8 +426,9 @@ UI 선택지 쓰지 말 것. 텍스트 목록 출력하고 채팅 응답 기다�
 **모든 회차 (33%/67%/100%, 단일·다중 무관)는 템플릿 시스템 우선 사용** ("빈칸 템플릿 시스템" 섹션 참고):
 - 단일: `practice/_templates/<도메인>-<기능slug>_<%>/`
 - 다중: `practice/_templates/<도메인>-<기능1>+<기능2>_<%>/` (`+` 결합)
-- 존재 → 템플릿 파일들을 src/로 Copy-Item 후 종료. **파일 내용 Read 금지.**
-- 존재 X → 원본 파일 Read 후 빈칸 처리 + 결과를 `_templates/` 에 저장 (이때만 Read 허용)
+- **존재 체크는 `Test-Path` (⚠️ Glob tool 금지 — 디렉토리 못 잡아서 항상 없다고 오판). slug 는 소문자.**
+- True → 템플릿 파일들을 src/로 Copy-Item 후 종료. **파일 내용 Read 금지.**
+- False → 원본 파일 Read 후 빈칸 처리 + 결과를 `_templates/` 에 저장 (이때만 Read 허용)
 
 각 파일을 "빈칸 비율과 자리 정의" 룰대로 처리해서 **src/의 실제 위치에 덮어쓰기**:
 
@@ -694,14 +711,14 @@ SCORE.md 의 파일 단위 섹션에 VO 파일도 추가 (Controller → Service
 ```
 practice/YYYY-MM-DD_<파일명slug>_<%>/
 ```
-- `파일명slug`: 파일명 케밥케이스 (예: `jwt-util`, `security-config`, `members-vo`)
+- `파일명slug`: **파일명(확장자 제거) 전부 소문자** ("템플릿 존재 체크 방법" 섹션의 정규화 규칙과 동일). 예: `TodoPage.jsx` → `todopage`, `useTodoStore.jsx` → `usetodostore`, `Http.jsx` → `http`. (기존 템플릿 폴더가 그 명명을 쓰므로 그대로 맞춤.)
 - 같은 회차 폴더 이미 있으면 `_2`, `_3` 자동 추가.
 
 학습 대상은 1개 파일. 그 파일을 `.practice-backup/<session-id>/`에 백업 (src/ 트리 미러). **Read tool 사용 금지 — Copy-Item만.**
 
 #### c. src/ 파일 빈칸 버전으로 덮어쓰기
 
-템플릿 있으면 Copy-Item만으로 처리. **Read 금지.** 템플릿 없으면 원본 Read 후 빈칸 처리 + 템플릿 저장.
+**템플릿 존재 체크는 `Test-Path practice/_templates/<파일명slug>_<%>` (⚠️ Glob tool 금지 — 디렉토리 못 잡음).** True 면 Copy-Item만으로 처리(**Read 금지**). False 면 원본 Read 후 빈칸 처리 + 템플릿 저장.
 
 #### d. `.state` 파일 생성
 
