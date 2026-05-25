@@ -62,7 +62,7 @@ git -C "$repo" add -A
 - `/스킬푸쉬 <메시지>` 로 인자 있으면 → 그 메시지 그대로.
 - 인자 없으면 → `git -C "$repo" status --porcelain` 결과로 **바뀐 스킬 폴더명**을 뽑아 자동 생성. 표준 한국어, 시니컬 OFF.
   - 형식: `chore(skills): <스킬1>, <스킬2> 업데이트` (추가/삭제 섞이면 동사 조정)
-  - 예: `chore(skills): 연습, 도전100 템플릿 존재 체크 Test-Path로 수정`
+  - 예: `chore(skills): 연습, 연습100 템플릿 존재 체크 Test-Path로 수정`
 
 커밋 (Co-Authored-By 포함):
 
