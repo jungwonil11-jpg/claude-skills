@@ -76,7 +76,7 @@ practice/PROGRESS.md 또는 "기능별 100×100 도전" 표 없음. 먼저 /연�
 
 **매핑 못 찾음** → 안내 후 종료:
 ```
-기능 "<한글>" 슬러그 매핑 없음. C:\Users\jungw\.claude\skills\도전100\SKILL.md 의 매핑 테이블에 추가 필요.
+기능 "<한글>" 슬러그 매핑 없음. 도전100/SKILL.md 의 매핑 테이블에 추가 필요.
 ```
 
 ### 4. 분기
@@ -118,97 +118,22 @@ practice/PROGRESS.md 또는 "기능별 100×100 도전" 표 없음. 먼저 /연�
 
 #### 4-C-단일. 5-파일 묶음 100% 단일 기능
 
-`/연습` 의 5-파일 묶음 100% 단일 기능 워크플로우 그대로:
+`/연습` 2-A(5-파일 묶음 모드)의 **c(회차폴더+백업) → d(템플릿/빈칸 처리) → e(.state) → f(PROGRESS 갱신)** 를 그대로 실행. 도전100은 연습의 a(PROGRESS 확인)·b(기능+퍼센티지 선택)를 **표→번호 진입**으로 대체하므로, 아래만 다르다:
 
-1. **회차 폴더명**:
-   ```
-   practice/YYYY-MM-DD_<도메인>-<기능slug>_100/
-   ```
-   같은 폴더 있으면 `_2`, `_3` 자동.
-
-2. **학습 대상 파일 목록** (5-파일 묶음):
-   - `src/main/java/com/study/myproject01/<도메인>/controller/<도메인 PascalCase>Controller.java`
-   - `src/main/java/com/study/myproject01/<도메인>/service/<도메인 PascalCase>Service.java`
-   - `src/main/java/com/study/myproject01/<도메인>/service/<도메인 PascalCase>ServiceImpl.java`
-   - `src/main/java/com/study/myproject01/<도메인>/mapper/<도메인 PascalCase>Mapper.java`
-   - `src/main/resources/mapper/<도메인>-mapper.xml`
-
-   도메인 PascalCase: `members` → `Members`, `guestbook` → `GuestBook`.
-
-3. **백업** — `.practice-backup/<session-id>/` (5개 파일 그대로).
-
-4. **템플릿 체크** (⚠️ **`Test-Path` 사용, Glob tool 금지** — Glob 은 디렉토리를 못 잡아서 폴더가 있어도 "없음" 오판 → 매번 재생성. slug 은 소문자):
-   - `Test-Path practice/_templates/<도메인>-<기능slug>_100` → True 면 src/로 Copy-Item (Read 금지)
-   - False → 강사 원본 Read + `_filter.md` 적용 + 100% 빈칸 처리 → `_templates/` 저장 → src/로 복사
-
-5. **`.state`**:
-   ```json
-   {
-     "mode": "5-file",
-     "session_id": "<회차 폴더명>",
-     "domain": "<도메인>",
-     "features": [ { "slug": "<기능slug>", "label": "<기능 한글>" } ],
-     "percent": 100,
-     "started_at": "<ISO 8601>",
-     "backup_dir": ".practice-backup/<session-id>",
-     "target_files": [ ... 5개 경로 ... ]
-   }
-   ```
-
-6. **README.md** — 회차 정보, 학습 대상 파일 5개, "끝나면 /연습 채점".
-
-7. **PROGRESS.md 갱신** — 도메인 매트릭스의 100% 셀 ⌛, 마지막 갱신 오늘.
+- **퍼센티지 100 고정** (100×100 트랙 전용)
+- **기능 = 번호에서 매핑된 슬러그** (메뉴 선택 X). 회차 폴더 `practice/YYYY-MM-DD_<도메인>-<기능slug>_100/`
+- 파일 5개·경로·`.state`(`mode: "5-file"`, `percent: 100`, `features` 1개 원소)는 연습 2-A 형식 그대로. 도메인 PascalCase: `members`→`Members`, `guestbook`→`GuestBook`
+- 회차 폴더에 `README.md` 생성 — 회차 정보 + "끝나면 /연습 채점"
 
 ---
 
 #### 4-C-종합. 도메인 폴더 통째 100%
 
-`/연습` 의 **2-A-종합 종합 모드** 워크플로우 그대로:
+`/연습` 2-A-종합 워크플로우 그대로 실행 — 파일 자동 탐지(controller/service/mapper/**vo**/xml), `features` 자동 채움, `.state`(`mode: "domain-all"`, `include_vos: true`), VO 빈칸 룰, PROGRESS 종합 트랙 갱신 모두 연습 2-A-종합 정의 사용. 도전100 차이:
 
-1. **회차 폴더명**:
-   ```
-   practice/YYYY-MM-DD_<도메인>-종합_100/
-   ```
-   같은 폴더 있으면 `_2`, `_3` 자동.
-
-2. **학습 대상 파일 자동 탐지** (도메인 폴더 전체):
-   - `src/main/java/com/study/myproject01/<도메인>/controller/*.java`
-   - `src/main/java/com/study/myproject01/<도메인>/service/*.java`
-   - `src/main/java/com/study/myproject01/<도메인>/mapper/*.java`
-   - `src/main/java/com/study/myproject01/<도메인>/vo/*.java`  ← VO 포함
-   - `src/main/resources/mapper/<도메인>-mapper.xml`
-
-   총 6~10개. common 폴더는 제외.
-
-3. **features 자동 채움** — 컨트롤러 메서드 분석, `_filter.md` 제외. 각 메서드를 `{ slug, label }` 로 변환 (한글-슬러그 매핑 테이블 재사용).
-
-4. **백업** — `.practice-backup/<session-id>/` 에 위 파일들 그대로 복사.
-
-5. **템플릿 체크** (⚠️ **`Test-Path` 사용, Glob tool 금지** — Glob 은 디렉토리를 못 잡아서 폴더가 있어도 "없음" 오판 → 매번 재생성. slug 은 소문자):
-   - `Test-Path practice/_templates/<도메인>-종합_100` → True 면 src/로 Copy-Item (Read 금지)
-   - False → 강사 원본 Read + `_filter.md` 적용 + 100% 빈칸 처리 (VO 룰 포함 — `/연습` 2-A-종합 d 참고) → `_templates/` 저장 → src/로 복사
-
-6. **`.state`**:
-   ```json
-   {
-     "mode": "domain-all",
-     "session_id": "<회차 폴더명>",
-     "domain": "<도메인>",
-     "features": [ ...자동 채움... ],
-     "include_vos": true,
-     "percent": 100,
-     "started_at": "<ISO 8601>",
-     "backup_dir": ".practice-backup/<session-id>",
-     "target_files": [ ...자동 탐지... ]
-   }
-   ```
-
-7. **README.md** — "종합 모드 — 도메인 정복 회차" 강조, 학습 대상 파일 전부 명시, "끝나면 /연습 채점".
-
-8. **PROGRESS.md 갱신**:
-   - 도메인 매트릭스 셀은 안 건드림 (종합은 별도 트랙)
-   - 기능별 100×100 도전 표의 `<도메인>/종합` 행만 ⌛(또는 진행 카운터 미증가 — 채점 후 +1)
-   - 마지막 갱신 오늘
+- 진입 = 번호에서 슬러그 `종합` 매핑
+- 회차 폴더: `practice/YYYY-MM-DD_<도메인>-종합_100/`
+- 회차 폴더에 `README.md` 생성 — "종합 모드 — 도메인 정복 회차" + "끝나면 /연습 채점"
 
 ### 5. 마무리 채팅
 

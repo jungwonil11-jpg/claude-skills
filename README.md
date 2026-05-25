@@ -6,11 +6,15 @@ Claude Code 글로벌 skill 모음. 새 컴퓨터에서 셋업하면 모든 프�
 
 ## 새 컴퓨터 셋업 (한 번만)
 
+> **Windows 전용.** 셋업 스크립트(`setup.bat`)와 statusline·hook(`*.ps1`)이 cmd/PowerShell 기반이라 macOS·Linux에서는 그대로 동작하지 않습니다.
+
 이 레포를 `~/.claude/claude-skills/`에 clone하고, **각 스킬 폴더를 `~/.claude/skills/`로 junction 링크**. 기존 `~/.claude/skills/` 안에 다른 스킬이 있어도 **건드리지 않고 공존**.
 
 ```cmd
 git clone https://github.com/jungwonil11-jpg/claude-skills %USERPROFILE%\.claude\claude-skills
 ```
+
+> **본인이 아닌 사용자**라면 위 URL을 그대로 쓰지 말고, 먼저 이 repo를 **fork**한 뒤 본인 fork 주소로 clone하세요. 원본 URL로 clone하면 `/스킬푸쉬`가 push 권한이 없는 원본 repo로 올리려다 실패합니다.
 
 클론된 `claude-skills` 폴더의 **`setup.bat`을 더블클릭**하면 끝. (cmd로 돌리려면: `cd %USERPROFILE%\.claude\claude-skills && setup.bat`)
 
@@ -51,6 +55,10 @@ git push              # 다른 PC와 공유
 ---
 
 ## Skill 목록
+
+> **이 스킬들은 제 개인 워크플로우에 맞춰져 있습니다.** 국비학원 자바/Spring 수업(`/강사싱크`·`/시작` = 강사 upstream + `study` 브랜치), 노션 학습노트(`/노션메모`·`/노션정리`), 코딩 연습 사이클(`/연습`·`/힌트`·`/도전100` = `src/` 자바 전제), 시니컬 음슴체 페르소나(`/최초셋팅`)가 깔려 있습니다. `/푸쉬`·`/스킬푸쉬`만 워크플로우 독립적입니다.
+>
+> 가져다 쓰실 거면 **fork 후 입맛대로 바꾸세요.** 안 쓸 스킬은 fork에서 **폴더째 삭제**하면 됩니다(`setup.bat`은 없는 폴더는 링크하지 않음). 워크플로우가 다르면 각 `SKILL.md`를 직접 고쳐도 됩니다.
 
 | Skill | 설명 |
 |--------|------|
