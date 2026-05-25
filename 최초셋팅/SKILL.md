@@ -22,10 +22,31 @@ description: 새 컴퓨터에서 Claude Code 개인 환경을 한 번에 설치�
 ### 0. OS 확인
 Windows 아니면 중단하고 사용자에게 알림 (이 스킬은 Windows 전용).
 
-### 1. 페르소나 배포
-- `assets/persona-20대시니컬남성.md` → `~/.claude/persona-20대시니컬남성.md` 복사 (덮어쓰기 OK, 이게 핵심)
+### 1. 페르소나 배포 + 활성화
 
-> 시니컬 말투는 프로젝트 CLAUDE.md의 `@~/.claude/persona-20대시니컬남성.md` import 줄로 켜짐. 그 import 줄은 study 레포 따라 자동으로 옴 — 이 스킬은 **import 대상 실물 파일만** 깔아주면 됨. 모든 프로젝트에 전역 적용하려면 `~/.claude/CLAUDE.md` 끝에 같은 import 한 줄 추가.
+페르소나는 **실물 파일 + 그 파일을 부르는 `@import` 줄** 둘 다 있어야 켜진다. 실물만 깔면 고아 파일이라 말투가 안 먹는다.
+
+**(a) 실물 파일 배포**
+- `assets/persona-20대시니컬남성.md` → `~/.claude/persona-20대시니컬남성.md` 복사 (덮어쓰기 OK)
+
+**(b) 글로벌 CLAUDE.md에 import 줄 멱등 추가**
+`~/.claude/CLAUDE.md` 에 import 한 줄을 박아 **전역으로** 켠다 (프로젝트별 CLAUDE.md import 에 의존하면 import 없는 프로젝트에선 말투가 안 먹음 — 전역으로 한 번에 켜는 게 확실).
+
+- 파일 없음 → 그 줄만 담아 생성
+- 있는데 줄 없음 → 끝에 append
+- 이미 있음 → 스킵 (멱등)
+
+```powershell
+$cm = "$HOME\.claude\CLAUDE.md"
+$line = '@~/.claude/persona-20대시니컬남성.md'
+$cur = if (Test-Path $cm) { Get-Content $cm -Raw } else { '' }
+if ($cur -notmatch [regex]::Escape($line)) {
+    if ($cur -and -not $cur.EndsWith("`n")) { Add-Content $cm "" -Encoding utf8 }
+    Add-Content $cm $line -Encoding utf8
+}
+```
+
+> ⚠️ 글로벌 `~/.claude/CLAUDE.md` 는 개인 프로필이 담긴 파일이라 **통째 생성·덮어쓰기 금지.** settings.json 머지(3단계)와 동일하게 **import 한 줄만 멱등 추가** — 기존 내용은 절대 안 건드린다.
 
 ### 2. 스크립트 배포
 - `assets/statusline.ps1` → `~/.claude/statusline.ps1`
