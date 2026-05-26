@@ -14,7 +14,7 @@ description: 수업 끝난 직후 실행. 강사 upstream 코드를 main에 미�
 `practice/*/.state` 파일이 하나라도 존재하면 즉시 거절:
 ```
 진행 중인 학습이 있어서 /강사싱크 못 함 (src/가 빈칸 상태일 수 있음).
-먼저 /연습 채점으로 끝내거나, 포기하려면:
+먼저 /채점으로 끝내거나, 포기하려면:
   1. .practice-backup/<id>/ 에서 src/ 수동 복구
   2. practice/<회차>/.state 삭제
   3. 다시 /강사싱크
