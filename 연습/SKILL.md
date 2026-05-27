@@ -1,16 +1,15 @@
 ---
 name: 연습
-description: 프로젝트의 학습 파일을 src/에서 직접 빈칸 처리한다 (33/67/100%·장인·종합). 채점·복구는 /채점 스킬. 백업으로 원본 안전.
+description: 프로젝트의 학습 파일을 src/에서 직접 빈칸 처리한다 (33/67/100%·종합). 채점·복구는 /채점 스킬. 백업으로 원본 안전.
 ---
 
 # 연습 — 원본 구멍 뚫기 방식 코딩 연습 사이클
 
-`/연습` 은 src/의 학습 대상 파일에 빈칸을 뚫는다 (33/67/100%) — **장인 모드** (5-파일 묶음 통째 빈 파일) 또는 **종합 모드** (도메인 폴더 통째 100% 빈칸) 포함.
+`/연습` 은 src/의 학습 대상 파일에 빈칸을 뚫는다 (33/67/100%) — **종합 모드** (도메인 폴더 통째 100% 빈칸) 포함.
 
 > 빈칸 채운 답안 **채점 + src/ 원본 복구는 별도 `/채점` 스킬**. (토큰 분리 — 빈칸 생성 호출 때 채점 룰이 안 딸려오게)
 
 빈칸 형식은 **항상 fill-in-the-blank (`_____`)**. 퍼센티지로 빈칸 양만 조절.
-장인 모드는 토큰 빈칸이 아니라 파일 자체를 빈 상태로 두는 별개 모드 — 구조부터 사용자가 직접 작성.
 종합 모드는 100% 빈칸 처리하되 도메인 폴더 전체(컨트롤러+서비스+임플+매퍼+XML+VO들)를 대상으로 함.
 
 ---
@@ -61,7 +60,6 @@ src/ 원본 파일에 직접 빈칸을 뚫고, 사용자는 IDE 풀 기능(impor
 | **종합 모드 100%** | ✅ (`<도메인>-종합_100`) |
 | **다중 기능 100% (`1,2 100`)** | ✅ (`<도메인>-<기능1>+<기능2>_100`) |
 | **33%/67% (단일·다중 무관)** | ✅ (`<도메인>-<기능slug>_<%>`) |
-| 장인 모드 | ❌ 빈 파일이라 불필요 |
 
 ### 템플릿 저장 위치
 
@@ -400,14 +398,12 @@ UI 선택지 쓰지 말 것. 텍스트 목록 출력하고 채팅 응답 기다�
 진행할 기능과 퍼센티지 입력:
   - 단일: "1 33", "2 67", "3 100"
   - 다중 (한 회차에 여러 기능 동시 학습): "1,2 67" 또는 "1 2 67" (쉼표 또는 공백 구분)
-  - 장인 (5-파일 묶음 통째 빈 파일): "장인" — 모든 구현 기능을 한꺼번에, 빈 .java/.xml에서 처음부터 작성 (2-A-장인 섹션 참고)
   - 종합 (도메인 폴더 통째 100% 빈칸): "종합" — 모든 구현 기능 + 도메인 내 VO들까지 한번에 (2-A-종합 섹션 참고)
 ```
 
 - 잠금(🔒) 기능은 선택 못 함. 강사 코드에 해당 메소드가 없으면 자동 잠금.
 - 이미 ✅인 셀도 다시 풀 수 있음 (반복 학습 허용).
 - **다중 기능**: 같은 컨트롤러 안의 여러 기능을 동시에 빈칸 처리. 빈칸 양 늘어나지만 5-파일 묶음 파일 셋은 동일하니까 백업/복구는 똑같이 동작.
-- **장인 모드**: 100% 상위. 토큰 빈칸 대신 5-파일 묶음을 통째로 빈 파일로 만들어 구조부터 직접 작성. 별도 워크플로우 — 2-A-장인 섹션에서 다룸.
 - **종합 모드**: 다중 기능 100% 의 확장. 도메인의 모든 기능 + VO 파일들까지 한 회차로. 보통 `/연습100` 에서 호출. 별도 워크플로우 — 2-A-종합 섹션에서 다룸.
 
 #### c. 회차 폴더 + 백업 생성
@@ -489,129 +485,6 @@ UI 선택지 쓰지 말 것. 텍스트 목록 출력하고 채팅 응답 기다�
 #### f. PROGRESS.md 갱신
 
 해당 셀을 ⌛(진행 중)로 변경. `마지막 갱신` 날짜 오늘로.
-
----
-
-### 2-A-장인. 장인 모드 (5-파일 묶음 통째)
-
-100% 모드의 상위. 토큰 빈칸 박지 않음. **5-파일 묶음 전체를 빈 파일로 덮어쓰기** — 사용자가 import부터, 클래스 선언부터, 어노테이션 위치부터, 메소드 시그니처부터, SQL부터 전부 직접 작성. 강사 코드 대신 README의 **스펙(URL/요청/응답/SQL 동작)** 만 보고 5-파일 묶음을 처음부터 짜는 모드.
-
-#### a. 입력
-
-5-파일 묶음 매트릭스 출력 후 기능+퍼센티지 자리에 `장인` 입력. 부분 기능 선택 불가 — **컨트롤러의 모든 구현된 기능을 한꺼번에 작업**. 잠금(🔒) 기능은 자동 제외.
-
-#### b. 회차 폴더
-
-```
-practice/YYYY-MM-DD_<도메인>-장인/
-```
-예: `practice/2026-05-17_guestbook-장인/`. 같은 이름 폴더 있으면 `_2`, `_3` 추가.
-
-#### c. 백업
-
-5-파일 묶음 일반 모드와 동일. `.practice-backup/<session-id>/` 에 5개 파일 그대로 복사.
-
-#### d. src/ 빈 파일로 덮어쓰기
-
-각 학습 대상 파일을 다음 내용으로 덮어쓰기:
-
-**Controller / Service / ServiceImpl / Mapper (.java)**:
-```java
-package com.study.myproject01.<도메인>.<하위>;
-
-// 장인 모드: 본인이 처음부터 작성
-```
-
-**Mapper XML**:
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<mapper namespace="com.study.myproject01.<도메인>.mapper.<도메인>Mapper">
-
-</mapper>
-```
-
-= 패키지 선언 / 네임스페이스만 있고 나머지 0줄.
-
-#### e. `.state` 파일
-
-```json
-{
-  "mode": "5-file-craftsman",
-  "session_id": "2026-05-17_guestbook-장인",
-  "domain": "guestbook",
-  "started_at": "2026-05-17T22:30:00",
-  "backup_dir": ".practice-backup/2026-05-17_guestbook-장인",
-  "target_files": [
-    "src/main/java/com/study/myproject01/guestbook/controller/GuestBookController.java",
-    "src/main/java/com/study/myproject01/guestbook/service/GuestBookService.java",
-    "src/main/java/com/study/myproject01/guestbook/service/GuestBookServiceImpl.java",
-    "src/main/java/com/study/myproject01/guestbook/mapper/GuestBookMapper.java",
-    "src/main/resources/mapper/guestbook-mapper.xml"
-  ],
-  "spec": {
-    "features": [
-      {
-        "label": "방명록 리스트",
-        "url": "GET /guestbook/list",
-        "request": "없음",
-        "response": "DataVO { success, message, data: List<GuestBookVO> }",
-        "sql_intent": "g_active=0 인 행 전체 SELECT"
-      }
-    ]
-  }
-}
-```
-
-`spec.features` 는 강사 백업 코드 분석해서 자동 채움 — URL(`@GetMapping/@PostMapping`), 시그니처, SQL 동작을 추출.
-
-#### f. README.md — 스펙 명세
-
-코드 0줄. URL/요청/응답/SQL 동작만 박음.
-
-```markdown
-# YYYY-MM-DD <도메인> 장인 모드
-
-## 모드
-**장인 모드** — 5-파일 묶음 통째 빈 파일에서 시작. 토큰 빈칸 없음. 본인이 import부터 SQL까지 처음부터 작성.
-
-## 학습 대상 파일 (전부 빈 상태, 패키지 선언만 박힘)
-1. src/.../controller/<도메인>Controller.java
-2. src/.../service/<도메인>Service.java
-3. src/.../service/<도메인>ServiceImpl.java
-4. src/.../mapper/<도메인>Mapper.java
-5. src/main/resources/mapper/<도메인>-mapper.xml
-
-## 스펙 (참고용 — 구현은 본인이)
-
-### 기능 1: 방명록 리스트
-- URL: GET /guestbook/list
-- 요청: 없음
-- 응답: DataVO { success, message, data: List<GuestBookVO> }
-- SQL: g_active=0 인 행 전체 SELECT
-
-### 기능 2: 방명록 등록
-(반복)
-
-## 진행 방법
-1. IntelliJ에서 5개 파일 열고 통째 작성
-2. import, 어노테이션, 클래스 선언, 메소드 시그니처, SQL 모두 본인이
-3. 빌드 통과 확인: `./gradlew build`
-4. 끝나면 `/채점`
-
-## 채점 방식 (토큰 비교 X)
-- 컴파일 통과 (`./gradlew build`)
-- 강사 스펙 ↔ 시그니처/URL/SQL 매칭
-- 5-파일 일관성 (메소드명 5곳)
-- SCORE_<N>.md 에 기능 단위 체크리스트로 결과 기록
-```
-
-#### g. PROGRESS.md 영향
-
-장인 모드는 33/67/100 매트릭스 셀 갱신 **안 함**. PROGRESS.md 끝에 별도 섹션 "장인 회차 기록" 자동 추가/갱신 (구조는 PROGRESS.md 구조 섹션 참고).
 
 ---
 
@@ -749,7 +622,7 @@ practice/YYYY-MM-DD_<파일명slug>_<%>/
 ## 채점 — 별도 `/채점` 스킬로 분리
 
 빈칸 채운 답안 채점 + src/ 원본 복구는 **`/채점` 스킬**이 담당 (토큰 분리 목적).
-`.state` 의 `mode`(`5-file`/`single`/`domain-all`/`5-file-craftsman`)로 채점 방식 분기 — 채점 기준·SCORE 형식·PROGRESS 갱신·장인 채점 룰 전부 `/채점` SKILL.md 에 있음.
+`.state` 의 `mode`(`5-file`/`single`/`domain-all`)로 채점 방식 분기 — 채점 기준·SCORE 형식·PROGRESS 갱신 룰 전부 `/채점` SKILL.md 에 있음.
 채점 완료 시 `.state` 삭제 + src/ 복구 → git diff 0.
 
 ---
@@ -788,13 +661,6 @@ PROGRESS.md가 없으면 `/연습` 첫 실행 시 자동 생성. 기능 목록�
 
 ## 잠금 해제 방법
 강사가 새 기능을 강의/구현한 후, 위 표에서 해당 행의 🔒를 #(다음 번호)로 바꾸고 셀을 ⬜로 추가.
-
-## 장인 회차 기록 (5-파일 묶음 통째 작성)
-*장인 모드 채점 후 자동 추가/갱신. 매트릭스와 별개 트랙.*
-
-| 날짜 | 도메인 | 빌드 | 기능 통과 | 메모 |
-|---|---|---|---|---|
-| 2026-05-17 | GuestBook | O | 2/2 | 4점 만점 |
 ```
 
 ### 학습 곡선 기준 기본 순서 (PROGRESS 자동 생성 시 적용)
